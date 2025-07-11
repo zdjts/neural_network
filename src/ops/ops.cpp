@@ -64,6 +64,49 @@ std::shared_ptr<Node> mul(Graph &graph, std::shared_ptr<Node> a,
   return c;
 }
 
+std::shared_ptr<Node> sigmoid(Graph &graph, std::shared_ptr<Node> a) {
+  // 前向传播：计算 Sigmoid 的输出值
+  int rows = a->value.get_rows();
+  int cols = a->value.get_cols();
+  Matrix m(rows, cols);  // 用于存储 Sigmoid 的输出结果
+
+  for (int i = 0; i < rows; ++i) {
+    for (int j = 0; j < cols; ++j) {
+      // 计算 Sigmoid(x) = 1 / (1 + e^(-x))
+      m(i, j) = 1.0f / (1.0f + std::exp(-a->value(i, j)));
+    }
+  }
+
+  // 创建新的 Node 节点来存储 Sigmoid 的输出
+  std::vector<std::weak_ptr<Node>> parents;
+  parents.push_back(a);
+  std::shared_ptr<Node> c =
+      graph.make_node(m, parents, "Sigmoid");  // 节点名称为 "Sigmoid"
+
+  // 定义反向传播逻辑
+  std::weak_ptr<Node> c_weak = c;  // 使用 weak_ptr 防止循环引用
+
+  c->_backward = [a, c_weak]() {          // 捕获上游节点 a 和当前节点 c_weak
+    if (auto c_shared = c_weak.lock()) {  // 锁定 weak_ptr 以安全访问 c
+      Matrix upstream_grad = c_shared->grad;  // 从当前节点 c 获取上游梯度
+
+      // 计算 Sigmoid 的局部梯度：sigma'(x) = sigma(x) * (1 - sigma(x))
+      // 注意：这里的 sigma(x) 是前向传播时 c->value 中的值
+      Matrix local_grad(a->value.get_rows(), a->value.get_cols());
+      for (int i = 0; i < local_grad.get_rows(); ++i) {
+        for (int j = 0; j < local_grad.get_cols(); ++j) {
+          float sigmoid_val =
+              c_shared->value(i, j);  // 获取前向传播时 Sigmoid 的输出值
+          local_grad(i, j) = sigmoid_val * (1.0f - sigmoid_val);
+        }
+      }
+
+      // 将上游梯度与局部梯度进行元素级乘法，并累加到输入节点 a 的梯度中
+      a->grad = a->grad + upstream_grad.element_mul(local_grad);
+    }
+  };
+  return c;  // 返回 Sigmoid 节点的 shared_ptr
+}
 std::shared_ptr<Node> relu(Graph &graph, std::shared_ptr<Node> a) {
   int rows = a->value.get_rows();
   int cols = a->value.get_cols();

@@ -3,8 +3,8 @@
 #include <iomanip>
 #include <iostream>
 #include <stdexcept>
-void Matrix::clear_grad() { std::fill(data_.begin(), data_.end(), 0.0f); }
-
+void Matrix::clear_grad() { std::fill(data_.begin(), data_.end(), 0.0f); };
+void Matrix::clear() { std::fill(data_.begin(), data_.end(), 0.0f); };
 Matrix::Matrix(int r, int c) : rows_(r), cols_(c), data_(r * c, 0.0f) {}
 Matrix::Matrix(const std::vector<std::vector<float>>& data)
     : rows_(data.size()),

@@ -17,6 +17,7 @@ std::shared_ptr<Node> sum(Graph& graph, std::shared_ptr<Node> a);
 
 std::shared_ptr<Node> relu(Graph& graph, std::shared_ptr<Node> a);
 
+std::shared_ptr<Node> sigmoid(Graph& graph, std::shared_ptr<Node> a);
 std::shared_ptr<Node> sub(Graph& graph, std::shared_ptr<Node> a,
                           std::shared_ptr<Node> b);
 

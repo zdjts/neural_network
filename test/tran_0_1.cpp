@@ -1,3 +1,4 @@
+
 #include <algorithm>  // For std::shuffle
 #include <cmath>
 #include <iostream>
@@ -14,7 +15,7 @@
 // 辅助函数：随机初始化权重
 Matrix random_matrix(int rows, int cols) {
   Matrix m(rows, cols);
-  std::mt19937 gen(42);  // 使用固定种子以保证结果可复现
+  std::mt19937 gen(49);  // 使用固定种子以保证结果可复现
   std::uniform_real_distribution<> distr(-0.5, 0.5);
   for (int i = 0; i < rows; ++i) {
     for (int j = 0; j < cols; ++j) {
@@ -23,6 +24,8 @@ Matrix random_matrix(int rows, int cols) {
   }
   return m;
 }
+
+// 噪声函数,根据随机值对Matrix矩阵进行不同的噪声添加
 
 // 辅助函数：获取预测结果的类别
 int get_predicted_class(const Matrix& prediction_row) {
@@ -45,6 +48,17 @@ Matrix create_batch(const Matrix& source, const std::vector<int>& indices) {
   }
   return batch;
 }
+// 二值化数据
+void data_set(Matrix& source) {
+  std::vector<float>& data = source.get_data();
+
+  for (auto& i : data) {
+    if (i > 0.1f)
+      i = 1.0f;
+    else
+      i = 0.0f;
+  }
+}
 
 int main() {
   try {
@@ -56,19 +70,24 @@ int main() {
 
     Matrix X_train_full = train_dataset.get_features();
     Matrix Y_train_full = one_hot_encode(train_dataset.get_labels());
+    Matrix X_test_full = test_dataset.get_features();
 
     std::cout << "Training data loaded: " << train_dataset.size() << " samples."
               << std::endl;
     std::cout << "Test data loaded: " << test_dataset.size() << " samples."
               << std::endl;
 
+    // 二值化数据
+    // data_set(X_train_full);
+
+    // data_set(X_test_full);
     // --- 2. 初始化网络和超参数 ---
     Graph g;
     float learning_rate = 0.05f;
-    int epochs = 10;  // 对于大数据集，epoch可以少一些
+    int epochs = 5;  // 对于大数据集，epoch可以少一些
     int batch_size = 64;
     int input_size = 784;
-    int hidden_size = 128;
+    int hidden_size = 32;
     int output_size = 10;
 
     // --- 3. 定义网络参数 ---
@@ -159,7 +178,7 @@ int main() {
     std::cout << "\nFinal Test Accuracy: " << accuracy << "%" << std::endl;
 
     // 数据保存在文件中
-    std::string save_path = "../MNIST_1.model";
+    std::string save_path = "../models/MNIST_1_sigmoid.model";
     save_parameters(save_path, {W1, b1, W2, b2});
   } catch (const std::exception& e) {
     std::cerr << "An error occurred: " << e.what() << std::endl;

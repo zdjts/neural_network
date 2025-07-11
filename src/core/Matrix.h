@@ -11,11 +11,11 @@ class Matrix {
   explicit Matrix(int r, int c);
   explicit Matrix(int r, int c, float num);
   explicit Matrix(const std::vector<std::vector<float>>& data);
-  // explicit Matrix(Matrix&& other);
   [[nodiscard]] int get_rows() const { return rows_; }
   [[nodiscard]] int get_cols() const { return cols_; }
 
   void clear_grad();
+  void clear();
   // 对应位置元素相乘
   Matrix sum() const;
   Matrix element_mul(const Matrix& other) const;

@@ -12,12 +12,13 @@
 
 #include <QApplication>  // 用于获取可执行文件路径
 #include <QDateTime>     // 用于生成唯一文件名
+#include <QDebug>        // 用于调试输出
 #include <QDir>          // 用于处理目录和路径
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QMessageBox>
+#include <QPainter>
 #include <QProcess>  // 用于调用外部程序
-#include <QDebug>    // 用于调试输出
 #include <QPushButton>
 #include <QSlider>
 #include <QVBoxLayout>
@@ -80,7 +81,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
 
   // 7. 设置窗口属性
   setWindowTitle("手写识别");
-  resize(800, 600);
+  resize(600, 600);
 }
 
 MainWindow::~MainWindow() {}
@@ -112,11 +113,45 @@ void MainWindow::recognizeImage() {
   // 步骤 2: 保存画布内容为图片文件
   // **注意**: 此处调用了你在 DrawingCanvas 中添加的 `getImage()` 公共方法
   const QImage &imageToSave = canvas->getImage();
+
+  // --- 新增的预处理逻辑 ---
+  // 1. 寻找边界框
+  int minX = imageToSave.width(), minY = imageToSave.height(), maxX = 0,
+      maxY = 0;
+  bool foundPixel = false;
+  for (int y = 0; y < imageToSave.height(); ++y) {
+    for (int x = 0; x < imageToSave.width(); ++x) {
+      // 检查像素是否为黑色（笔迹）
+      if (qGray(imageToSave.pixel(x, y)) < 255) {
+        if (x < minX) minX = x;
+        if (x > maxX) maxX = x;
+        if (y < minY) minY = y;
+        if (y > maxY) maxY = y;
+        foundPixel = true;
+      }
+    }
+  }
+
   if (imageToSave.isNull()) {
     QMessageBox::warning(this, "警告", "画布为空，无法识别。");
     return;
   }
-  if (!imageToSave.save(imagePath, "PNG")) {
+
+  QRect boundingBox(minX, minY, maxX - minX + 1, maxY - minY + 1);
+  QImage croppedImage = imageToSave.copy(boundingBox);
+
+  // 3. 将裁剪后的图像调整为正方形（添加白边）
+  int size = qMax(croppedImage.width(), croppedImage.height());
+  QImage squareImage(size, size, QImage::Format_RGB32);
+  squareImage.fill(Qt::white);  // 填充白色背景
+  QPainter painter(&squareImage);
+  int xOffset = (size - croppedImage.width()) / 2;
+  int yOffset = (size - croppedImage.height()) / 2;
+  painter.drawImage(xOffset, yOffset, croppedImage);
+  painter.end();
+
+  // 保存正方形图片
+  if (!squareImage.save(imagePath, "PNG")) {
     QMessageBox::critical(this, "错误", "无法保存图片到: " + imagePath);
     return;
   }
