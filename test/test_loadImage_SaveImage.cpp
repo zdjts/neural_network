@@ -1,7 +1,10 @@
-#include "../core/CsvDataSet.cpp"
+#include <CsvDataSet.h>
+
+#include <iostream>
+
+#include "../src/core/CsvDataSet.h"
 #include "../src/stb/LoadImage.h"
 #include "../src/stb/SaveImage.h"
-#include "CsvDataSet.h"
 #include "Graph.h"
 #include "ops.h"
 

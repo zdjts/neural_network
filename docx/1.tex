@@ -1,0 +1,68 @@
+\documentclass{article}
+\usepackage{ctex}
+\usepackage{longtable}
+\usepackage{multirow}
+\usepackage{geometry}
+
+% 设置 A4 纸大小，页边距为 1 英寸
+\geometry{a4paper, margin=1in}
+
+\begin{document}
+
+% 项目信息标题
+\begin{center}
+    \textbf{\huge 西北农林科技大学信息工程学院} \\
+    \vspace{0.5cm}
+    \textbf{\LARGE 《简易神经网络实现》实施计划书}
+\end{center}
+
+\vspace{1cm}
+
+% 学生信息表格
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.0977}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1700}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1062}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1912}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.1503}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 10\tabcolsep) * \real{0.2846}}@{}}
+\toprule
+姓名 & & 学号 & & 专业班级 & \\
+\hline
+& & & & 电子邮箱 & \\
+\end{longtable}
+
+\vspace{1cm}
+
+% 项目计划表格
+\begin{longtable}[]{@{}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.1551}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.4490}}
+  >{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.3959}}@{}}
+\toprule
+项目名称 & \multicolumn{2}{>{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.8449} + 2\tabcolsep}@{}}{} \\
+\hline
+任务描述 & \multicolumn{2}{>{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.8449} + 2\tabcolsep}@{}}{（填写项目任务及要求）} \\
+\hline
+技术路线 & \multicolumn{2}{>{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.8449} + 2\tabcolsep}@{}}{（填写项目完成的基本思路和方法）} \\
+\hline
+进度安排 & \multicolumn{2}{>{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.8449} + 2\tabcolsep}@{}}{7月10日选题 \\
+7月11日---12日 项目设计 \\
+7月13日---17日 代码实现，并完成调试 \\
+7月17日---18日 程序优化 \\
+7月19日---20日 撰写实习报告 \\
+7月21日 实习答辩} \\
+\hline
+\multirow{2}{*}{考核要求} & \multicolumn{2}{>{\raggedright\arraybackslash}p{(\columnwidth - 4\tabcolsep) * \real{0.8449} + 2\tabcolsep}@{}}{总成绩＝考勤成绩*20％+报告成绩*50\%+答辩成绩*30％} \\
+& & 指导教师（签名） \\
+\bottomrule
+\end{longtable}
+
+\vspace{1cm}
+
+% 日期
+\begin{flushright}
+    2014年7月11日
+\end{flushright}
+
+\end{document}

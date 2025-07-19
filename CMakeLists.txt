@@ -29,14 +29,19 @@ add_library(neural_network STATIC ${NEURAL_NETWORK_LIB_SOURCES})
 file(GLOB_RECURSE TEST_SOURCES "./test/*.cpp")
 
 set(WINDOW_FILES
-    ./window/main_window.cpp
-    ./window/window.cpp
-    # 如果有 DrawingCanvas 相关实现，也要加进来
-    ./window/drawingcanvas.cpp
+    ./app/main_window.cpp
+    ./app/window.cpp
+    ./app/drawingcanvas.cpp
 )
 add_executable(window ${WINDOW_FILES})
 
+# 修正: 更改 executable 名称为 'training' (原为 'traning')
+# 新增: 链接 'training' executable 到 'neural_network' 库
+add_executable(training "./training/train.cpp")
+target_link_libraries(training PRIVATE neural_network)
+
 target_link_libraries(window PRIVATE neural_network Qt5::Widgets)
+
 foreach(TEST_FILE ${TEST_SOURCES})
   get_filename_component(TEST_NAME ${TEST_FILE} NAME_WE)
 
@@ -44,4 +49,3 @@ foreach(TEST_FILE ${TEST_SOURCES})
 
   target_link_libraries(${TEST_NAME} PRIVATE neural_network)
 endforeach()
-

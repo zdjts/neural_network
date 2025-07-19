@@ -120,8 +120,6 @@ void save_parameters(const std::string& filepath,
     outfile.write(reinterpret_cast<const char*>(&rows), sizeof(rows));
     outfile.write(reinterpret_cast<const char*>(&cols), sizeof(cols));
 
-    // ✅ 效率优化：直接写入整个矩阵的数据块
-    // 我们需要一个方法来访问Matrix内部的原始数据指针
     outfile.write(reinterpret_cast<const char*>(mat.get_data_ptr()),
                   rows * cols * sizeof(float));
   }

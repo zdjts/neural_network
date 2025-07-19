@@ -11,7 +11,7 @@
 #include "Graph.h"
 #include "ops.h"
 // 辅助函数：获取预测结果的类别
-int get_predicted_class(const Matrix& prediction_row) {
+int get_predicted_class(const Matrix &prediction_row) {
   int max_idx = 0;
   for (int i = 1; i < prediction_row.get_cols(); ++i) {
     if (prediction_row(0, i) > prediction_row(0, max_idx)) {
@@ -21,17 +21,17 @@ int get_predicted_class(const Matrix& prediction_row) {
   return max_idx;
 }
 
-void data_set(Matrix& source) {
-  std::vector<float>& data = source.get_data();
+void data_set(Matrix &source) {
+  std::vector<float> &data = source.get_data();
 
-  for (auto& i : data) {
+  for (auto &i : data) {
     if (i > 0.1f)
       i = 1.0f;
     else
       i = 0.0f;
   }
 }
-int main(int argc, char** argv) {
+int main(int argc, char **argv) {
   /*if (argc < 2) {*/
   /*  throw std::runtime_error("运行错误，传入参数数量不足\n");*/
   /*}*/
@@ -41,10 +41,10 @@ int main(int argc, char** argv) {
   int epochs = 10;  // 对于大数据集，epoch可以少一些
   int batch_size = 64;
   int input_size = 784;
-  int hidden_size = 32;
+  int hidden_size = 128;
   int output_size = 10;
 
-  LoadImage l_image = LoadImage(std::string(argv[1]), 1);
+  LoadImage l_image = LoadImage(std::string(argv[1]));
 
   /*LoadImage l_image{"../models/3.bmp"};*/
 
